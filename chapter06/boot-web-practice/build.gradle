@@ -20,7 +20,7 @@ apply plugin: 'io.spring.dependency-management'
 ext.moduleName = 'com.apress.cems.boot'
 
 dependencies {
-    compile boot.starterJpa, boot.starterThymeleaf, boot.starterWeb
+    implementation boot.starterJpa, boot.starterThymeleaf, boot.starterWeb
     runtimeOnly misc.h2
     implementation boot.actuator
 
@@ -48,7 +48,7 @@ jar {
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 06 - Spring Boot Web Practice",
                 "Implementation-Version": archiveVersion,
                 "Main-Class"         : "com.apress.cems.SpringBootWebApplication",
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

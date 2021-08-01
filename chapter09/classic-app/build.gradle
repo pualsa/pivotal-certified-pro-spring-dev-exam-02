@@ -11,7 +11,7 @@ dependencies {
     compileOnly misc.servletApi
 
     testImplementation testing.api, testing.platformRunner, testing.mockito, spring.test, testing.mockito, testing.api,testing.restAssured, testing.restAssuredAll
-    testRuntime testing.engine, testing.platformRunner
+    testRuntimeOnly testing.engine, testing.platformRunner
 }
 
 war {
@@ -22,7 +22,7 @@ war {
                 "Created-By": System.getProperty('java.version'),
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 09 - Spring Web Classic App",
                 "Implementation-Version": archiveVersion,
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

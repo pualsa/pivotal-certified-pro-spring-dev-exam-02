@@ -5,6 +5,10 @@ out
 build
 *.class
 .DS_Store
+.settings
+bin
+*.db
+*.bak
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/

@@ -8,4 +8,6 @@ module com.apress.cems.pojos {
     requires java.sql;
 
     exports com.apress.cems.pojos.repos;
+    exports com.apress.cems.pojos.services;
+    exports com.apress.cems.pojos.services.impl;
 }

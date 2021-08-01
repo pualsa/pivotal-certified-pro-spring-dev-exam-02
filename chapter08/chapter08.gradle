@@ -12,9 +12,9 @@ subprojects {
         apply plugin: 'idea'
 
         dependencies {
-            compile project(':chapter00:dao')
-            compile misc.lang3, misc.slf4j, misc.jsr250
-            compile (misc.logback) {
+            implementation project(':chapter00:dao')
+            implementation misc.lang3, misc.slf4j, misc.jsr250
+            implementation (misc.logback) {
                 exclude group: "javax.activation", module: "activation"
                 exclude group: "edu.washington.cs.types.checker", module: "checker-framework"
             }

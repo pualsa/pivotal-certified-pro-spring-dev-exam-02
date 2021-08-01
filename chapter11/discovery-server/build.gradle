@@ -44,7 +44,7 @@ jar {
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 09 - Spring Boot REST",
                 "Implementation-Version": archiveVersion,
                 "Main-Class"         : "com.apress.cems.DiscoveryServer",
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

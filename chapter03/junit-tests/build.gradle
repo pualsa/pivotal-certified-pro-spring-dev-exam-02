@@ -5,8 +5,9 @@ plugins {
 ext.moduleName = 'com.apress.cems.junit'
 
 dependencies {
-    api project(':chapter03:test-base')
-    testCompile testing.junit, testing.easymock, testing.jmockju4, testing.mockitoAll
+    implementation project(':chapter00:repos')
+    implementation project(':chapter03:test-base')
+    testImplementation testing.junit, testing.easymock, testing.jmockju4, testing.mockitoAll
     testRuntimeOnly testing.vintageEngine
 }
 
@@ -16,7 +17,7 @@ jar {
                 "Created-By": System.getProperty('java.version'),
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 03 - JUnit 4 Tests",
                 "Implementation-Version": archiveVersion,
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

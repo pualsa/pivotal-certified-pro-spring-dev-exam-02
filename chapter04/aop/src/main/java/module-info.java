@@ -9,7 +9,6 @@ module com.apress.cems.aop {
     requires org.apache.commons.lang3;
     requires java.sql;
     requires spring.jdbc;
-
     requires spring.context;
     requires spring.beans;
     requires spring.core;

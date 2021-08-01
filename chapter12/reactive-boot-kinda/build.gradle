@@ -46,7 +46,7 @@ jar {
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 12 - Spring Boot Webflux Application - not totally reactive - using router functions",
                 "Implementation-Version": archiveVersion,
                 "Main-Class"         : "com.apress.cems.reactive.ReactiveApplication",
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

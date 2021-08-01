@@ -5,8 +5,8 @@ plugins {
 ext.moduleName = 'com.apress.cems.config.practice'
 
 dependencies {
-    compile project(':chapter02:pojos')
-    compile misc.h2, spring.jdbc,  misc.jsr250, misc.inject
+    implementation project(':chapter02:pojos')
+    implementation misc.h2, spring.jdbc,  misc.jsr250, misc.inject
 }
 
 jar {
@@ -15,7 +15,7 @@ jar {
                 "Created-By": System.getProperty('java.version'),
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 02 - Configurations Practice",
                 "Implementation-Version": archiveVersion,
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

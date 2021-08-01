@@ -5,10 +5,11 @@ plugins {
 ext.moduleName = 'com.apress.cems.jupiter'
 
 dependencies {
-    api project(':chapter03:test-base')
+    implementation project(':chapter00:repos')
+    implementation project(':chapter03:test-base')
 
     testImplementation testing.api, testing.easymock, testing.jmockju5, testing.platformRunner, testing.mockito
-    testRuntime testing.engine, testing.platformRunner
+    testRuntimeOnly testing.engine, testing.platformRunner
 }
 
 test {
@@ -22,7 +23,7 @@ jar {
                 "Created-By": System.getProperty('java.version'),
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 03 - JUnit 5 tests",
                 "Implementation-Version": archiveVersion,
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

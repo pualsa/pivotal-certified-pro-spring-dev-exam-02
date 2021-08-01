@@ -11,10 +11,12 @@ subprojects {
         apply plugin: 'idea'
 
         dependencies {
-            compile project(':chapter00:dao')
-            compile misc.lang3, misc.ojdbc, misc.slf4j, misc.jsr250
-            testCompile misc.h2
-            compile (misc.logback) {
+            implementation project(':chapter00:dao')
+            implementation project(':chapter00:repos')
+            implementation spring.beans, spring.contextSupport, spring.jdbc
+            implementation misc.lang3, misc.ojdbc, misc.slf4j, misc.jsr250
+            testImplementation misc.h2
+            implementation (misc.logback) {
                 exclude group: "javax.activation", module: "activation"
                 exclude group: "edu.washington.cs.types.checker", module: "checker-framework"
             }

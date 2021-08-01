@@ -6,14 +6,13 @@ apply plugin: 'war'
 ext.moduleName = 'com.apress.cems.sec'
 
 dependencies {
-    compile project(':chapter05:sec-data-jpa')
-    compile spring.webmvc, hibernate.validator, misc.h2, misc.hikari, misc.jstl
-    compile  spring.securityWeb, spring.securityTaglibs,spring.securityConfig
+    implementation project(':chapter05:sec-data-jpa')
+    implementation spring.webmvc, hibernate.validator, misc.h2, misc.hikari, misc.jstl
+    implementation spring.securityWeb, spring.securityTaglibs,spring.securityConfig
     compileOnly misc.servletApi
 
-    testCompile testing.api, testing.platformRunner, testing.mockito, spring.test, testing.mockito, testing.hamcrest, spring.securityTest
-    testImplementation testing.api
-    testRuntime testing.engine, testing.platformRunner
+    testImplementation testing.api, testing.platformRunner, testing.mockito, spring.test, testing.mockito, testing.hamcrest, spring.securityTest
+    testRuntimeOnly testing.engine, testing.platformRunner
 }
 
 war {
@@ -24,7 +23,7 @@ war {
                 "Created-By": System.getProperty('java.version'),
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 07 - Spring Web Security using Java Configuration",
                 "Implementation-Version": archiveVersion,
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }

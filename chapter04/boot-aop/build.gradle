@@ -23,11 +23,10 @@ ext.moduleName = 'com.apress.cems.boot.test'
 ext['junit-jupiter.version'] = "5.6.0"
 
 dependencies {
-    compile boot.starterWeb, boot.starterJpa, misc.ojdbc, misc.lang3
+    implementation boot.starterWeb, boot.starterJpa, misc.ojdbc, misc.lang3
 
-    testCompile testing.api, boot.starterTest, testing.platformRunner, misc.h2
-    testImplementation testing.api
-    testRuntime testing.engine, testing.platformRunner
+    testImplementation testing.api, boot.starterTest, testing.platformRunner, misc.h2
+    testRuntimeOnly testing.engine, testing.platformRunner
 }
 
 test {
@@ -67,7 +66,7 @@ jar {
                 "Specification-Title": "Pivotal Certified Professional Spring Developer Exam - Chapter 04 - Spring Boot Aop",
                 "Implementation-Version": archiveVersion,
                 "Main-Class"         : "com.apress.cems.aop.Application",
-                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
         )
     }
 }
