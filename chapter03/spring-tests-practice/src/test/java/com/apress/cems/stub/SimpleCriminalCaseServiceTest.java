@@ -52,7 +52,7 @@ public class SimpleCriminalCaseServiceTest {
     SimpleCriminalCaseService service = new SimpleCriminalCaseService();
 
     @BeforeEach
-     void setUp(){
+    void setUp() {
         repo.init();
 
         //create object to be tested
@@ -62,36 +62,39 @@ public class SimpleCriminalCaseServiceTest {
 
     //positive test, we know that a Case with ID=1 exists
     @Test
-     void findByIdPositive() {
+    void findByIdPositive() {
         var criminalCase = service.findById(CASE_ID);
         assertNotNull(criminalCase);
     }
 
     //negative test, we know that a Case with ID=99 does not exist
     @Test
-     void findByIdNegative() {
-        assertThrows( NotFoundException.class, () ->
+    void findByIdNegative() {
+        assertThrows(NotFoundException.class, () ->
                 service.findById(99L), "No such case exists");
     }
 
     @Test
-     void deleteByIdPositive() {
+    void deleteByIdPositive() {
         service.deleteById(CASE_ID);
 
         // we do a find to test the deletion succeeded
-        assertThrows( NotFoundException.class, () ->
+        assertThrows(NotFoundException.class, () ->
                 service.findById(CASE_ID), "No such case exists");
     }
 
     @Test
-     void deleteByIdNegative() {
+    void deleteByIdNegative() {
         // TODO 15. Analyse the stub implementation and add a test for service.deleteById(99L)
+        assertThrows(NotFoundException.class,
+                () -> service.deleteById(99L)
+        );
     }
 
     //positive test, we know that cases for this detective exist and how many
     @Test
-     void findByLeadPositive() {
-        var result =  service.findByLeadInvestigator(detective);
+    void findByLeadPositive() {
+        var result = service.findByLeadInvestigator(detective);
         assertEquals(2, result.size());
     }
 
@@ -99,10 +102,14 @@ public class SimpleCriminalCaseServiceTest {
     @Test
     public void findByLeadNegative() {
         // TODO 16. Analyse the stub implementation and add a test for service.findByLeadInvestigator(detective);
+        Detective detective = new Detective();
+        detective.setId(1234L);
+        var result = service.findByLeadInvestigator(detective);
+        assertEquals(0, result.size());
     }
 
     @AfterEach
-     void tearDown(){
+    void tearDown() {
         repo.clear();
     }
 }
