@@ -39,11 +39,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 1.0
  */
 // Comment the @Disabled annotation to run your test
-@Disabled
+//@Disabled
 class HumanAppCfgTest {
 
     @Test
-    void testHumanAndItem() {
+    public void testHumanAndItem() {
         ConfigurableApplicationContext ctx = new AnnotationConfigApplicationContext(HumanAppCfg.class);
 
         Human humanBean = ctx.getBean(Human.class);
@@ -53,5 +53,20 @@ class HumanAppCfgTest {
         assertNotNull(humanBean.getItem().getTitle());
 
         ctx.close();
+    }
+
+    @Test
+    public void testBook() {
+        ConfigurableApplicationContext ctx = new AnnotationConfigApplicationContext(HumanAppCfg.class);
+        try {
+            Human person = ctx.getBean(Human.class);
+
+            Item book = ctx.getBean("book", Item.class);
+            assertEquals("Bestseller", book.getTitle());
+
+            assertSame(book, person.getItem());
+        } finally {
+            ctx.close();
+        }
     }
 }

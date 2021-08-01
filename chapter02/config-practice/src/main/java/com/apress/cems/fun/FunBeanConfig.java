@@ -40,7 +40,8 @@ import org.springframework.context.annotation.Configuration;
 class FunBeanConfig {
 
     // TODO 13. Add the proper annotation to specify an initialization method and a destroy method
-    FunBean funBean(){
+    @Bean(initMethod = "specialInit", destroyMethod = "specialDestroy")
+    public FunBean funBean(){
         return new FunBean();
     }
 }
