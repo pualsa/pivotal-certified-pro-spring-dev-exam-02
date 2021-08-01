@@ -36,7 +36,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -48,16 +48,17 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
  */
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().mvcMatchers("/resources/**","/images/**","/styles/**");
+        web.ignoring().mvcMatchers("/resources/**", "/images/**", "/styles/**");
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         try {
-            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            // default encoder - bcrypt
+            PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             auth
                     .inMemoryAuthentication()
                     .passwordEncoder(passwordEncoder)
@@ -73,10 +74,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers("/resources/**","/images/**","/styles/**").permitAll()
+                .mvcMatchers("/resources/**", "/images/**", "/styles/**").permitAll()
                 .mvcMatchers("/persons/*/edit").hasRole("ADMIN")
                 .mvcMatchers("/detectives/**").hasRole("ADMIN")
-                .mvcMatchers("/**").hasAnyRole("ADMIN","USER")
+                .mvcMatchers("/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest()
                 .authenticated()
                 .and()

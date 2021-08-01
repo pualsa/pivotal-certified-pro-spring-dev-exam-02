@@ -44,7 +44,7 @@ public class AppConfigTest {
     @Test
     void testBeanLifecycle() {
         var ctx = new AnnotationConfigApplicationContext(AppConfig.class);
-        ctx.registerShutdownHook();
+        //ctx.registerShutdownHook();
 
         var employee = ctx.getBean(Employee.class);
         assertNotNull(employee);
@@ -56,5 +56,6 @@ public class AppConfigTest {
         logger.info("Salary: {}", salary.getAmount());
         logger.info("Salary: {}", salary.getAmount());
 
+        ctx.close();
     }
 }

@@ -30,24 +30,42 @@ package com.apress.cems.scopes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 /**
  * @author Iuliana Cosmina
  * @since 1.0
  */
 @Component
 public class Employee {
-    private Salary salary;
+    private ISalary salary;
 
-    public Employee(Salary salary) {
+    public Employee(ISalary salary) {
         this.salary = salary;
     }
 
     @Autowired
-    public void setSalary(Salary salary) {
+    public void setSalary(ISalary salary) {
         this.salary = salary;
     }
 
-    public Salary getSalary() {
+    public ISalary getSalary() {
         return salary;
     }
+
+    @PostConstruct
+    void postConstruct() {
+        System.out.println("post construct");
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        System.out.println("shutdown");
+    }
+
+    public void close() {
+        System.out.println("close");
+    }
+
 }

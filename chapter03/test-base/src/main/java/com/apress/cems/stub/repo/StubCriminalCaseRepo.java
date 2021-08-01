@@ -86,7 +86,11 @@ public class StubCriminalCaseRepo extends StubAbstractRepo<CriminalCase> impleme
     }
     @Override
     public Set<CriminalCase> findByLeadInvestigator(Detective detective) {
-        return records2.get(detective);
+        var res = records2.get(detective);
+        if (res == null) {
+            return Collections.emptySet();
+        }
+        return res;
     }
 
     @Override

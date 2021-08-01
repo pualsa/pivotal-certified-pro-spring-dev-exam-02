@@ -29,9 +29,15 @@ package com.apress.cems.boot;
 
 import com.apress.cems.boot.entities.Person;
 import com.apress.cems.boot.services.PersonService;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+
+import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,13 +46,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ApplicationTest {
 
     @Autowired
     private PersonService personService;
 
+    @Order(1)
+    @Transactional
+    @Rollback(value = true) // rollback=true is default
     @Test
-    void testSavePerson(){
+    void testSavePerson() {
         var person = new Person();
         person.setFirstName("Irene");
         person.setLastName("Adler");
@@ -55,4 +65,9 @@ class ApplicationTest {
         assertEquals(2, personService.count());
     }
 
+    @Order(2)
+    @Test
+    void testCount() {
+        assertEquals(1, personService.count());
+    }
 }

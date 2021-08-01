@@ -54,48 +54,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/persons")
 public class PersonsController {
-    private PersonService personService;
     static Comparator<Person> COMPARATOR_BY_ID = Comparator.comparing(Person::getId);
+    private PersonService personService;
+
     public PersonsController(PersonService personService) {
         this.personService = personService;
-    }
-
-    /**
-     * Handles requests to list all persons.
-     */
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    public List<Person> list(Model model) {
-        List<Person> persons =  personService.findAll();
-        persons.sort(COMPARATOR_BY_ID);
-        model.addAttribute("persons", persons);
-        return persons;
-    }
-
-    /**
-     * Handles requests to create a person.
-     */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public void create(@Validated(Person.BasicValidation.class) @RequestBody Person person, BindingResult result, @Value("#{request.requestURL}")
-            StringBuffer originalUrl, HttpServletResponse response) {
-        if (result.hasErrors()) {
-            String errString = createErrorString(result);
-            throw new PersonsException(HttpStatus.BAD_REQUEST, "Cannot save entry because: "+ errString);
-        }
-        // This a workaround for a Jackson bug, the field is actually not deserialized. This is the issue I've found already created on GitHub:
-        // https://github.com/FasterXML/jackson-databind/issues/935#issuecomment-520070413.
-        // It is closed, but the bug is still there in version 2.9.9. when I asked about it,
-        // I was told to create a new issue, which I will, as soon as this book is published.
-        if(StringUtils.isEmpty(person.getPassword())){
-            person.setPassword(NumberGenerator.getPassword());
-        }
-        try {
-            Person newPerson = personService.save(person);
-            response.setHeader("Location", getLocationForUser(originalUrl, newPerson.getId()));
-        } catch (Exception e) {
-            throw  new PersonsException(HttpStatus.UNPROCESSABLE_ENTITY, e);
-        }
     }
 
     /**
@@ -107,11 +70,51 @@ public class PersonsController {
         return template.expand(childIdentifier).toASCIIString();
     }
 
+    /**
+     * Handles requests to list all persons.
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
+    public List<Person> list(Model model) {
+        List<Person> persons = personService.findAll();
+        persons.sort(COMPARATOR_BY_ID);
+        model.addAttribute("persons", persons);
+        return persons;
+    }
+
+    /**
+     * Handles requests to create a person.
+     */
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public void create(@Validated(Person.BasicValidation.class) @RequestBody Person person,
+                       BindingResult result,
+                       @Value("#{request.requestURL}") StringBuffer originalUrl,
+                       HttpServletResponse response) {
+        if (result.hasErrors()) {
+            String errString = createErrorString(result);
+            throw new PersonsException(HttpStatus.BAD_REQUEST, "Cannot save entry because: " + errString);
+        }
+        // This a workaround for a Jackson bug, the field is actually not deserialized. This is the issue I've found already created on GitHub:
+        // https://github.com/FasterXML/jackson-databind/issues/935#issuecomment-520070413.
+        // It is closed, but the bug is still there in version 2.9.9. when I asked about it,
+        // I was told to create a new issue, which I will, as soon as this book is published.
+        if (StringUtils.isEmpty(person.getPassword())) {
+            person.setPassword(NumberGenerator.getPassword());
+        }
+        try {
+            Person newPerson = personService.save(person);
+            response.setHeader("Location", getLocationForUser(originalUrl, newPerson.getId()));
+        } catch (Exception e) {
+            throw new PersonsException(HttpStatus.UNPROCESSABLE_ENTITY, e);
+        }
+    }
+
     private String createErrorString(BindingResult result) {
-        StringBuilder sb =  new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         result.getAllErrors().forEach(error -> {
-            if(error instanceof FieldError) {
-                FieldError err= (FieldError) error;
+            if (error instanceof FieldError) {
+                FieldError err = (FieldError) error;
                 sb.append("Field '").append(err.getField()).append("' value error: ").append(err.getDefaultMessage()).append("\n");
             }
         });
@@ -125,12 +128,13 @@ public class PersonsController {
         try {
             return personService.getByCriteriaDto(criteria);
         } catch (InvalidCriteriaException ice) {
-            throw  new PersonsException(HttpStatus.BAD_REQUEST, ice);
+            throw new PersonsException(HttpStatus.BAD_REQUEST, ice);
         }
     }
 
     /**
      * Returns the {@code Person} instance with id {@code id}
+     *
      * @param id
      * @return
      */
@@ -138,15 +142,16 @@ public class PersonsController {
     @GetMapping("/{id}")
     public Person show(@PathVariable Long id) {
         Optional<Person> personOpt = personService.findById(id);
-        if(personOpt.isPresent()) {
+        if (personOpt.isPresent()) {
             return personOpt.get();
         } else {
-            throw new PersonsException(HttpStatus.NOT_FOUND, "Unable to find entry with id " + id );
+            throw new PersonsException(HttpStatus.NOT_FOUND, "Unable to find entry with id " + id);
         }
     }
 
     /**
      * Updates the {@code Person} instance with id {@code id}
+     *
      * @param updatedPerson
      * @param id
      * @return
@@ -155,19 +160,20 @@ public class PersonsController {
     @PutMapping("/{id}")
     public void update(@RequestBody Person updatedPerson, @PathVariable Long id) {
         Optional<Person> personOpt = personService.findById(id);
-        if(personOpt.isPresent()) {
+        if (personOpt.isPresent()) {
             Person person = personOpt.get();
             person.setUsername(updatedPerson.getUsername());
             person.setFirstName(updatedPerson.getFirstName());
             person.setLastName(updatedPerson.getLastName());
             personService.save(person);
         } else {
-            throw new PersonsException(HttpStatus.NOT_FOUND, "Unable to find entry with id " + id );
+            throw new PersonsException(HttpStatus.NOT_FOUND, "Unable to find entry with id " + id);
         }
     }
 
     /**
      * Delete the {@code Person} instance with id {@code id}
+     *
      * @param id
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
