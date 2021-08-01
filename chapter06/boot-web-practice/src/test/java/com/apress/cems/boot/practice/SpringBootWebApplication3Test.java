@@ -27,7 +27,7 @@ SOFTWARE.
 */
 package com.apress.cems.boot.practice;
 
-import org.junit.jupiter.api.Disabled;
+import com.apress.cems.practice.SpringBootWebApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -41,8 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Iuliana Cosmina
  * @since 1.0
  */
-@Disabled("Because of uncompleted tasks. Comment this line to run.")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@Disabled("Because of uncompleted tasks. Comment this line to run.")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        classes = SpringBootWebApplication.class)
 class SpringBootWebApplication3Test {
 
     @LocalServerPort
@@ -50,26 +51,46 @@ class SpringBootWebApplication3Test {
 
     @Test
     void testList() throws Exception {
-              String responseStr =   given().baseUri("http://localhost")
+        String responseStr = given().baseUri("http://localhost")
                 .port(port).when().get("/persons/list")
                 .then()
                 .assertThat().statusCode(HttpStatus.OK.value())
                 .extract().body().asString();
 
-              assertAll(
-                      () -> assertTrue(responseStr.contains("div class=\"persons\"")),
-                      () -> assertTrue(responseStr.contains("sherlock.holmes")),
-                      () -> assertTrue(responseStr.contains("nancy.drew"))
-              );
+        assertAll(
+                () -> assertTrue(responseStr.contains("div class=\"persons\"")),
+                () -> assertTrue(responseStr.contains("sherlock.holmes")),
+                () -> assertTrue(responseStr.contains("nancy.drew"))
+        );
     }
 
     @Test
     void testShow() throws Exception {
         // TODO 50. Write a test to check that checks that requesting "/persons/1" generates the appropriate response
+        String responseStr = given().baseUri("http://localhost")
+                .port(port).when().get("/persons/1")
+                .then()
+                .assertThat().statusCode(HttpStatus.OK.value())
+                .extract().body().asString();
+
+        assertAll(
+                () -> assertTrue(responseStr.contains("div class=\"persons\"")),
+                () -> assertTrue(responseStr.contains("sherlock")),
+                () -> assertTrue(responseStr.contains("holmes"))
+        );
     }
 
     @Test
     void testError() throws Exception {
         // TODO 51. Write a test to check that checks that requesting "/persons/99" generates the appropriate response
+        String responseStr = given().baseUri("http://localhost")
+                .port(port).when().get("/persons/99")
+                .then()
+                .assertThat().statusCode(HttpStatus.NOT_FOUND.value())
+                .extract().body().asString();
+
+        assertAll(
+                () -> assertTrue(responseStr.contains("div class=\"content\"")),
+                () -> assertTrue(responseStr.contains("Unexpected error!")));
     }
 }

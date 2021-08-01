@@ -27,7 +27,7 @@ SOFTWARE.
 */
 package com.apress.cems.boot.practice;
 
-import org.junit.jupiter.api.Disabled;
+import com.apress.cems.practice.SpringBootWebApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -43,8 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Iuliana Cosmina
  * @since 1.0
  */
-@Disabled("Because of uncompleted tasks. Comment this line to run.")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+//@Disabled("Because of uncompleted tasks. Comment this line to run.")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+        classes = SpringBootWebApplication.class)
 @AutoConfigureMockMvc
 class SpringBootWebApplicationTest {
 
@@ -70,10 +71,19 @@ class SpringBootWebApplicationTest {
     @Test
     void testShow() throws Exception {
         // TODO 48. Write a test to check that checks that requesting "/persons/1" generates the appropriate response
+        mockMvc.perform(get("/persons/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("persons/show"))
+                .andExpect(model().attribute("person", hasProperty("id", is(1L))
+                ));
     }
 
-   @Test
+    @Test
     void testError() throws Exception {
-       // TODO 49. Write a test to check that checks that requesting "/persons/99" generates the appropriate response
+        // TODO 49. Write a test to check that checks that requesting "/persons/99" generates the appropriate response
+        mockMvc.perform(get("/persons/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("problem", not(emptyString())));
     }
 }
