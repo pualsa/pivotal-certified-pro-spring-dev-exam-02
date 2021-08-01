@@ -29,21 +29,16 @@ package com.apress.cems.emf.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.hibernate.SessionFactory;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
-import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -112,9 +107,26 @@ public class JpaDbConfig {
     }
 
     // TODO 39. Declare and configure the entity manager factory and the transaction manager beans.
+    @Bean
+    public EntityManagerFactory entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("com.apress.cems.dao");
+        factoryBean.setDataSource(dataSource());
+
+        factoryBean.setJpaProperties(hibernateProperties());
+        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+
+        factoryBean.afterPropertiesSet();
+        return factoryBean.getNativeEntityManagerFactory();
+    }
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager(entityManagerFactory());
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
@@ -125,14 +137,14 @@ public class JpaDbConfig {
 
     //needed because Hibernate does not drop the database as it should
     @PostConstruct
-    void discardDatabase(){
+    void discardDatabase() {
         final String currentDir = System.getProperty("user.dir");
-        int start = url.indexOf("./")+ 2;
+        int start = url.indexOf("./") + 2;
         int end = url.indexOf(";", start);
         String dbName = url.substring(start, end);
-        File one  = new File(currentDir.concat(File.separator).concat(dbName).concat(".mv.db"));
+        File one = new File(currentDir.concat(File.separator).concat(dbName).concat(".mv.db"));
         one.deleteOnExit();
-        File two  = new File(currentDir.concat(File.separator).concat(dbName).concat(".trace.db"));
+        File two = new File(currentDir.concat(File.separator).concat(dbName).concat(".trace.db"));
         two.deleteOnExit();
     }
 

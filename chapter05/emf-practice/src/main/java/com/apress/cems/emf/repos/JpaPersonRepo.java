@@ -55,6 +55,7 @@ public class JpaPersonRepo implements PersonRepo {
     private EntityManager entityManager;
 
     // TODO 40. Annotate this method with the proper annotation to make the test pass
+    @PersistenceContext
     void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
