@@ -14,7 +14,7 @@ subprojects {
             implementation project(':chapter00:dao')
             implementation misc.lang3, misc.ojdbc, misc.slf4j, misc.jsr250, misc.h2, spring.beans, spring.contextSupport
 
-            implementation (misc.logback) {
+            implementation(misc.logback) {
                 exclude group: "javax.activation", module: "activation"
                 exclude group: "edu.washington.cs.types.checker", module: "checker-framework"
             }
@@ -33,7 +33,8 @@ subprojects {
 
         afterEvaluate {
             repositories {
-                jcenter()
+                //jcenter()
+                mavenCentral()
             }
 
             compileJava {

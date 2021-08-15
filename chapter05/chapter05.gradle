@@ -16,7 +16,7 @@ subprojects {
             implementation spring.beans, spring.contextSupport, spring.jdbc
             implementation misc.lang3, misc.ojdbc, misc.slf4j, misc.jsr250
             testImplementation misc.h2
-            implementation (misc.logback) {
+            implementation(misc.logback) {
                 exclude group: "javax.activation", module: "activation"
                 exclude group: "edu.washington.cs.types.checker", module: "checker-framework"
             }
@@ -34,7 +34,8 @@ subprojects {
 
         afterEvaluate {
             repositories {
-                jcenter()
+                //jcenter()
+                mavenCentral()
             }
 
             compileJava {

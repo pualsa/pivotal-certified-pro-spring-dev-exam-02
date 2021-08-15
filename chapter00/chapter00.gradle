@@ -10,7 +10,7 @@ subprojects {
     if (!project.name.contains("boot")) {
         apply plugin: 'java'
         apply plugin: 'idea'
-        
+
         //because Gradle is an idiot
         test {
             exclude 'module-info.class'
@@ -23,7 +23,8 @@ subprojects {
 
         afterEvaluate {
             repositories {
-                jcenter()
+                //jcenter()
+                mavenCentral()
             }
 
             compileJava {

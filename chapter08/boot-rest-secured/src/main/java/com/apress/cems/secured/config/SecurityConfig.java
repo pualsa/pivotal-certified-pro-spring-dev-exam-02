@@ -63,11 +63,11 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails john = User.withUsername("john").password(encoder().encode("doe")).roles("USER").build();
         UserDetails jane = User.withUsername("jane").password(encoder().encode("doe")).roles("USER", "ADMIN").build();
         UserDetails admin = User.withUsername("admin").password(encoder().encode("admin")).roles("ADMIN").build();
-        return new InMemoryUserDetailsManager(john,jane,admin);
+        return new InMemoryUserDetailsManager(john, jane, admin);
     }
 
     @Bean
-    PasswordEncoder encoder(){
+    PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -76,7 +76,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
         response.setStatus(403);
     };
 
-    AuthenticationEntryPoint restAuthenticationEntryPoint = (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+    AuthenticationEntryPoint restAuthenticationEntryPoint =
+            (request, response, authException) ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
 
     @Autowired
